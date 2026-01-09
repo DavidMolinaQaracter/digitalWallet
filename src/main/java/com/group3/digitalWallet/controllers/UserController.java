@@ -9,9 +9,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
     private final UserService userService;
-
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -20,7 +18,6 @@ public class UserController {
     public User createUser(@RequestBody Map<String, String> request) {
         return userService.createUser(request.get("name"));
     }
-
     @GetMapping
     public List<User> getAll() {
         return userService.getAllUsers();
