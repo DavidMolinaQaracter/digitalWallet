@@ -29,7 +29,7 @@ import java.util.Optional;
         }
 
         public boolean withdraw(int userId, Currency currency, Double amount) {
-            if(getUserById(userId).getBalance() - amount < 0)
+            if(getUserById(userId).getBalance(currency) - amount < 0)
                 return false;
 
             getUserById(userId).withdraw(amount, currency);
@@ -44,6 +44,4 @@ import java.util.Optional;
             }
             return null;
         }
-
-        public
 }
