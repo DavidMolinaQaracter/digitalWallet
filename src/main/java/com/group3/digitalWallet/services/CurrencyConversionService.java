@@ -1,7 +1,9 @@
 package com.group3.digitalWallet.services;
 
 import com.group3.digitalWallet.models.Currency;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CurrencyConversionService {
 
     // DEFINIMOS EL VALOR DE 1 EURO EN LAS OTRAS MONEDAS
