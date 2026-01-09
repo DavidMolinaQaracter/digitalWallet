@@ -24,14 +24,26 @@ import java.util.Optional;
             return users;
         }
 
-    // Añade o actualiza el saldo de una moneda específica
-    public User addBalance(int userId, Currency currency, Double amount) {
-        return users.stream()
-                .filter(u -> u.getId() == userId)
-                .findFirst()
-                .map(user -> {
-                    user.getWallets().put(currency, amount);
+        public void deposit(int userId, Currency currency, Double amount) {
+            getUserById(userId).deposit(amount, currency);
+        }
+
+        public boolean withdraw(int userId, Currency currency, Double amount) {
+            if(getUserById(userId).getBalance() - amount < 0)
+                return false;
+
+            getUserById(userId).withdraw(amount, currency);
+            return true;
+        }
+
+        public User getUserById(int userId) {
+            for (User user : users) {
+                if (user.getId() == userId) {
                     return user;
-                }).orElse(null);
-    }
+                }
+            }
+            return null;
+        }
+
+        public
 }

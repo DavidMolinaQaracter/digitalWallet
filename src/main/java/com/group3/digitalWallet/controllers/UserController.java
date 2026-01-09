@@ -18,6 +18,7 @@ public class UserController {
     public User createUser(@RequestBody Map<String, String> request) {
         return userService.createUser(request.get("name"));
     }
+
     @GetMapping
     public List<User> getAll() {
         return userService.getAllUsers();
