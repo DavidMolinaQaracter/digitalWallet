@@ -31,7 +31,22 @@ public class User {
         this.name = name;
     }
 
-    public void setWallets(Map<Currency, Double> wallets) {
+    public boolean setWallets(Map<Currency, Double> wallets) {
         this.wallets = wallets;
+    }
+
+    public double getBalance(Currency currency) {
+        return wallets.get(currency);
+    }
+
+    //Returns true if deposit is successful
+    public void deposit(double amount, Currency currency){
+        wallets.put(currency, wallets.getOrDefault(currency, 0.0) + amount);
+    }
+
+    //Returns true if withdraw is successful
+    public void withdraw(double amount, Currency currency){
+        double balance = wallets.getOrDefault(currency, 0.0);
+        wallets.put(currency, balance - amount);
     }
 }
