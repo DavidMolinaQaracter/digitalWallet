@@ -24,21 +24,23 @@ public class TransactionService {
     }
 
     // Returns true if the transaction was successful, false otherwise
-    public boolean makeTransaction(Transaction transaction){
+    public Transaction makeTransaction(Transaction transaction){
         double amount = transaction.getAmount();
-        User origUser = UserService.getUserById(transaction.getOriginUserId());
-        User destUser = UserService.getUserById(transaction.getOriginUserId());
+        User origUser = userService.getUserById(transaction.getOriginUserId());
+        User destUser = userService.getUserById(transaction.getOriginUserId());
         Currency origCurrency = transaction.getOriginCurrency();
         Currency destCurrency = transaction.getDstCurrency();
         if (origUser == null || destUser == null || amount < 0.0){
-            return false;
+            return null;
         }
-        if (!UserService.withdraw(transaction.getOriginUserId(), amount, origCurrency))
-            return false;
+        if (!userService.withdraw(transaction.getOriginUserId(), origCurrency, amount))
+            return null;
         double convertedAmount = currencyConversionService.convert(amount, origCurrency, destCurrency);
-        UserService.deposit(transaction.getDstUserId(), convertedAmount, destCurrency);
-        transactions.put(nextId++, transaction);
-        return true;
+        userService.deposit(transaction.getDstUserId(), destCurrency, convertedAmount);
+        transaction.setId(nextId);
+        transactions.put(nextId, transaction);
+        nextId++;
+        return transaction;
     }
 
     public List<Transaction> getTransactions() {

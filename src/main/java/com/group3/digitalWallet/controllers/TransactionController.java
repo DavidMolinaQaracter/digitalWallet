@@ -24,13 +24,14 @@ public class TransactionController {
     }
 
     @GetMapping("/{id}")
-    public Transaction getTransactionById(long id){
+    public Transaction getTransactionById(int id){
         return transactionService.getTransactionById(id);
     }
 
     @PostMapping
     public Transaction createTransaction(@RequestBody Transaction transaction){
-        transactionService.makeTransaction()
+        transactionService.makeTransaction(transaction);
+        return transaction;
     }
 
 }
