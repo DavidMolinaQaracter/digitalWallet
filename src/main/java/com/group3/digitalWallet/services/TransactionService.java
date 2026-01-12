@@ -1,5 +1,7 @@
 package com.group3.digitalWallet.services;
 
+import com.group3.digitalWallet.InsufficientFundsException;
+import com.group3.digitalWallet.UserNotFoundException;
 import com.group3.digitalWallet.models.Currency;
 import com.group3.digitalWallet.models.Transaction;
 import com.group3.digitalWallet.models.User;
@@ -24,20 +26,22 @@ public class TransactionService {
     }
 
     // Returns true if the transaction was successful, false otherwise
-    public boolean makeTransaction(User origUser, Currency origCurrency,
-                                    User destUser, Currency destCurrency,
-                                    double amount){
-        if (amount < 0.0 || origUser.getBalance(origCurrency) < amount ){
-            return false;
+    public Transaction makeTransaction(Transaction transaction)
+            throws UserNotFoundException, InsufficientFundsException {
+        double amount = transaction.getAmount();
+        User origUser = userService.getUserById(transaction.getOriginUserId());
+        User destUser = userService.getUserById(transaction.getOriginUserId());
+        Currency origCurrency = transaction.getOriginCurrency();
+        Currency destCurrency = transaction.getDstCurrency();
+        if (origUser == null || destUser == null || amount < 0.0){
+            throw new UserNotFoundException();
         }
-        origUser.withdraw(amount, origCurrency);
         double convertedAmount = currencyConversionService.convert(amount, origCurrency, destCurrency);
-        destUser.deposit(convertedAmount, destCurrency);
-
-        Transaction transaction = new Transaction(origUser.getId(), amount, origCurrency, destCurrency,
-                origUser.getId(), nextId);
-        transactions.put(nextId++, transaction);
-        return true;
+        userService.deposit(transaction.getDstUserId(), destCurrency, convertedAmount);
+        transaction.setId(nextId);
+        transactions.put(nextId, transaction);
+        nextId++;
+        return transaction;
     }
 
     public List<Transaction> getTransactions() {
