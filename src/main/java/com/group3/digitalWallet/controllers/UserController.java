@@ -24,6 +24,11 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable int id) {
+        return userService.getUserById(id);
+    }
+
     // Endpoint para añadir saldo: /users/1/balance
     @PostMapping("/{id}/balance")
     public User addBalance(@PathVariable int id, @RequestBody Map<String, Object> request) {
