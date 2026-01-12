@@ -26,15 +26,26 @@ public class SchedulePaymentController {
         public String setupRecurringPayment(@RequestBody Map<String, Object> request) {
             int origUserId = Integer.parseInt(request.get("originUserId").toString());
             int destUserId = Integer.parseInt(request.get("dstUserId").toString());
-            Currency origCurrency = Currency.valueOf(request.get("origCurrency").toString().toUpperCase()=; // "USD"
-            Currency destCurrency = Currency.valueOf(request.get("destCurrency").toString().toUpperCase()=; // "USD"
+            Currency origCurrency = Currency.valueOf(request.get("origCurrency").toString().toUpperCase());
+            Currency destCurrency = Currency.valueOf(request.get("destCurrency").toString().toUpperCase());
             double amount = Double.parseDouble(request.get("amount").toString());
 
-            User origUser =userService.getUserById(origUserId);
+            User origUser = userService.getUserById(origUserId);
             User destUser = userService.getUserById(destUserId);
-            scheduledPaymentService.schedulePayment(origUser, origCurrency, destUser,  destCurrency, amount);
+            scheduledPaymentService.createScheduledPayment(origUser, origCurrency, destUser, destCurrency, amount);
 
             return "Pago recurrente configurado correctamente.";
         }
+
+
+        @DeleteMapping("/{id}")
+        public String cancelPayment(@PathVariable int id) {
+            boolean success = scheduledPaymentService.cancelScheduledPayment(id);
+            if (success) {
+                return "El pago con ID " + id + " ha sido detenido.";
+            }
+            return "No se encontró el pago con ID " + id;
+        }
     }
+}
 }
