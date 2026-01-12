@@ -22,10 +22,11 @@ public class ScheduledPaymentService {
 
 
     public int createScheduledPayment(User origUser, Currency origCurrency, User destUser, Currency destCurrency, double amount) {
-        PaymentThread thread = new PaymentThread(nextId++, origUser, origCurrency, destUser, destCurrency, amount);
-        activeThreads.put(nextId++, thread);
+        int id = nextId++;
+        PaymentThread thread = new PaymentThread(id, origUser, origCurrency, destUser, destCurrency, amount);
+        activeThreads.put(id, thread);
         thread.start();
-        return nextId++;
+        return id;
     }
 
     public boolean cancelScheduledPayment(int id) {
