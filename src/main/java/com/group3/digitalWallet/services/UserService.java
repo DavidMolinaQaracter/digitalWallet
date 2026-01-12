@@ -1,4 +1,6 @@
 package com.group3.digitalWallet.services;
+import com.group3.digitalWallet.InsufficientFundsException;
+import com.group3.digitalWallet.UserNotFoundException;
 import com.group3.digitalWallet.models.Currency;
 import com.group3.digitalWallet.models.User;
 import org.springframework.stereotype.Service;
@@ -28,20 +30,19 @@ import java.util.Optional;
             getUserById(userId).deposit(amount, currency);
         }
 
-        public boolean withdraw(int userId, Currency currency, Double amount) {
+        public void withdraw(int userId, Currency currency, Double amount)
+                throws InsufficientFundsException {
             if(getUserById(userId).getBalance(currency) - amount < 0)
-                return false;
-
+                throw new InsufficientFundsException();
             getUserById(userId).withdraw(amount, currency);
-            return true;
         }
 
-        public User getUserById(int userId) {
+        public User getUserById(int userId) throws UserNotFoundException {
             for (User user : users) {
                 if (user.getId() == userId) {
                     return user;
                 }
             }
-            return null;
+            throw new UserNotFoundException();
         }
 }

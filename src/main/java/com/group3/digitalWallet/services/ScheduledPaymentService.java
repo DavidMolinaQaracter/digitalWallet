@@ -1,6 +1,8 @@
 package com.group3.digitalWallet.services;
 
+import com.group3.digitalWallet.InsufficientFundsException;
 import com.group3.digitalWallet.models.Currency;
+import com.group3.digitalWallet.models.Transaction;
 import com.group3.digitalWallet.models.User;
 import org.springframework.stereotype.Service;
 
@@ -64,10 +66,13 @@ public class ScheduledPaymentService {
             while (active) {
                 try {
                     System.out.println("Hilo " + id + ": Realizando pago...");
-                    transactionService.makeTransaction(origin, origCurr, dest, destCurr, amount);
+                    transactionService.makeTransaction(new Transaction(origin.getId(), dest.getId(), amount, origCurr, destCurr));
                     Thread.sleep(10000); //10 segundos entre pagos
                 } catch (InterruptedException e) {
                     active = false;
+                } catch (InsufficientFundsException e) {
+                    active = false;
+                    System.out.println("Hilo " + id + ": Fondos insuficientes, operacion cancelada");
                 }
             }
             System.out.println("Hilo " + id + ": Se ha detenido.");
