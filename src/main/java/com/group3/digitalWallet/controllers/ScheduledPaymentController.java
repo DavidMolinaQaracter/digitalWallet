@@ -37,7 +37,7 @@ public class ScheduledPaymentController {
     }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/cancel")
     public String cancelPayment(@PathVariable int id) {
         boolean success = scheduledPaymentService.cancelScheduledPayment(id);
         if (success) {
