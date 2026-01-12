@@ -30,8 +30,10 @@ public class TransactionController {
 
     @PostMapping
     public Transaction createTransaction(@RequestBody Transaction transaction){
-        transactionService.makeTransaction(transaction);
+        Transaction result = transactionService.makeTransaction(transaction);
         return transaction;
     }
+
+
 
 }

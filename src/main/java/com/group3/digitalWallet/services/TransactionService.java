@@ -1,5 +1,7 @@
 package com.group3.digitalWallet.services;
 
+import com.group3.digitalWallet.InsufficientFundsException;
+import com.group3.digitalWallet.UserNotFoundException;
 import com.group3.digitalWallet.models.Currency;
 import com.group3.digitalWallet.models.Transaction;
 import com.group3.digitalWallet.models.User;
@@ -24,17 +26,16 @@ public class TransactionService {
     }
 
     // Returns true if the transaction was successful, false otherwise
-    public Transaction makeTransaction(Transaction transaction){
+    public Transaction makeTransaction(Transaction transaction)
+            throws UserNotFoundException, InsufficientFundsException {
         double amount = transaction.getAmount();
         User origUser = userService.getUserById(transaction.getOriginUserId());
         User destUser = userService.getUserById(transaction.getOriginUserId());
         Currency origCurrency = transaction.getOriginCurrency();
         Currency destCurrency = transaction.getDstCurrency();
         if (origUser == null || destUser == null || amount < 0.0){
-            return null;
+            throw new UserNotFoundException();
         }
-        if (!userService.withdraw(transaction.getOriginUserId(), origCurrency, amount))
-            return null;
         double convertedAmount = currencyConversionService.convert(amount, origCurrency, destCurrency);
         userService.deposit(transaction.getDstUserId(), destCurrency, convertedAmount);
         transaction.setId(nextId);

@@ -1,5 +1,6 @@
 package com.group3.digitalWallet.services;
 
+import com.group3.digitalWallet.InsufficientFundsException;
 import com.group3.digitalWallet.models.Currency;
 import com.group3.digitalWallet.models.User;
 import org.springframework.stereotype.Service;
@@ -68,6 +69,9 @@ public class ScheduledPaymentService {
                     Thread.sleep(10000); //10 segundos entre pagos
                 } catch (InterruptedException e) {
                     active = false;
+                } catch (InsufficientFundsException e) {
+                    active = false;
+                    System.out.println("Hilo " + id + ": Fondos insuficientes, operacion cancelada");
                 }
             }
             System.out.println("Hilo " + id + ": Se ha detenido.");

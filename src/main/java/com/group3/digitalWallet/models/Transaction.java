@@ -6,6 +6,17 @@ public class Transaction {
     double amount;
     Currency originCurrency, dstCurrency;
 
+    public Transaction() {
+    }
+
+    public Transaction(int originUserId, int dstUserId, double amount, Currency originCurrency, Currency dstCurrency) {
+        this.originUserId = originUserId;
+        this.dstUserId = dstUserId;
+        this.amount = amount;
+        this.originCurrency = originCurrency;
+        this.dstCurrency = dstCurrency;
+    }
+
     public Transaction(int dstUserId, double amount, Currency originCurrency, Currency dstCurrency, int originUserId, int id) {
         this.dstUserId = dstUserId;
         this.amount = amount;
