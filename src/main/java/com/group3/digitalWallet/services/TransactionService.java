@@ -36,6 +36,7 @@ public class TransactionService {
         if (origUser == null || destUser == null || amount < 0.0){
             throw new UserNotFoundException();
         }
+        userService.withdraw(transaction.getOriginUserId(), origCurrency, amount);
         double convertedAmount = currencyConversionService.convert(amount, origCurrency, destCurrency);
         userService.deposit(transaction.getDstUserId(), destCurrency, convertedAmount);
         transaction.setId(nextId);
