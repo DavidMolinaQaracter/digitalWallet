@@ -29,6 +29,7 @@ public class UserController {
     public User addBalance(@PathVariable int id, @RequestBody Map<String, Object> request) {
         Currency curr = Currency.valueOf(request.get("currency").toString().toUpperCase());
         Double amount = Double.valueOf(request.get("amount").toString());
-        return userService.addBalance(id, curr, amount);
+        userService.deposit(id, curr, amount);
+        return userService.getUserById(id);
     }
 }
